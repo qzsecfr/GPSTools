@@ -10,6 +10,9 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QGroupBox>
+#include <QFile>
+#include <QFileDialog>
+#include <QMessageBox>
 
 GPSCoordWidget::GPSCoordWidget(QWidget* parent)
     : QWidget(parent)
@@ -170,10 +173,96 @@ void GPSCoordWidget::_onBtnClicked()
     }
     else if (btn == m_xyz2blhBatchBtn)
     {
-        // TODO
+        QString xyzFileName = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择要转换的XYZ文件。"), "", "*.txt;;*.*");
+        if (xyzFileName.isEmpty())
+        {
+            return;
+        }
+        QString blhFileName = QFileDialog::getSaveFileName(this, QString::fromLocal8Bit("选择要保存的BLH文件。"), "", "*.txt;;*.*");
+        if (blhFileName.isEmpty())
+        {
+            return;
+        }
+        QFile xyzFile(xyzFileName);
+        if (!xyzFile.open(QIODevice::Text | QIODevice::ReadOnly))
+        {
+            QMessageBox::information(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("无法打开所选的XYZ文件。"));
+            return;
+        }
+        QFile blhFile(blhFileName);
+        if (!blhFile.open(QIODevice::Text | QIODevice::WriteOnly))
+        {
+            QMessageBox::information(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("无法写入所选的BLH文件。"));
+            return;
+        }
+        while (!xyzFile.atEnd())
+        {
+            QString line = QString::fromLocal8Bit(xyzFile.readLine());
+            QStringList lineList = line.split(",");
+            if (lineList.size() < 3)
+            {
+                continue;
+            }
+            double X = lineList[0].trimmed().toDouble();
+            double Y = lineList[1].trimmed().toDouble();
+            double Z = lineList[2].trimmed().toDouble();
+            BLH blh = XYZ2BLH(XYZ(X, Y, Z));
+            QString writeLine;
+            writeLine += QString::number(_transFromDegree(blh.lat), 'f', 9) + ",";
+            writeLine += QString::number(_transFromDegree(blh.lon), 'f', 9) + ",";
+            writeLine += QString::number(blh.alt, 'f', 3) + "\n";
+            blhFile.write(writeLine.toLocal8Bit());
+        }
+        xyzFile.close();
+        blhFile.flush();
+        blhFile.close();
+        QMessageBox::information(this, QString::fromLocal8Bit("成功"), QString::fromLocal8Bit("XYZ文件转BLH已完成。"));
     }
     else if (btn == m_blh2xyzBatchBtn)
     {
-        // TODO
+        QString blhFileName = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择要转换的BLH文件。"), "", "*.txt;;*.*");
+        if (blhFileName.isEmpty())
+        {
+            return;
+        }
+        QString xyzFileName = QFileDialog::getSaveFileName(this, QString::fromLocal8Bit("选择要保存的XYZ文件。"), "", "*.txt;;*.*");
+        if (xyzFileName.isEmpty())
+        {
+            return;
+        }
+        QFile blhFile(blhFileName);
+        if (!blhFile.open(QIODevice::Text | QIODevice::ReadOnly))
+        {
+            QMessageBox::information(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("无法打开所选的BLH文件。"));
+            return;
+        }
+        QFile xyzFile(xyzFileName);
+        if (!xyzFile.open(QIODevice::Text | QIODevice::WriteOnly))
+        {
+            QMessageBox::information(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("无法写入所选的XYZ文件。"));
+            return;
+        }
+        while (!blhFile.atEnd())
+        {
+            QString line = QString::fromLocal8Bit(blhFile.readLine());
+            QStringList lineList = line.split(",");
+            if (lineList.size() < 3)
+            {
+                continue;
+            }
+            double lat = _transToDegree(lineList[0].trimmed().toDouble());
+            double lon = _transToDegree(lineList[1].trimmed().toDouble());
+            double alt = lineList[2].trimmed().toDouble();
+            XYZ xyz = BLH2XYZ(BLH(lat, lon, alt));
+            QString writeLine;
+            writeLine += QString::number(xyz.X, 'f', 3) + ",";
+            writeLine += QString::number(xyz.Y, 'f', 3) + ",";
+            writeLine += QString::number(xyz.Z, 'f', 3) + "\n";
+            xyzFile.write(writeLine.toLocal8Bit());
+        }
+        blhFile.close();
+        xyzFile.flush();
+        xyzFile.close();
+        QMessageBox::information(this, QString::fromLocal8Bit("成功"), QString::fromLocal8Bit("BLH文件转XYZ已完成。"));
     }
 }
