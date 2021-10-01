@@ -122,6 +122,8 @@ void GPSCoordWidget::_init()
 
 double GPSCoordWidget::_transToDegree(double currentValue)
 {
+    // 为防止C++精度损失做的微小增加
+    currentValue += 1e-13;
     if (m_degreeRBtn->isChecked())
     {
         return currentValue;
@@ -134,6 +136,8 @@ double GPSCoordWidget::_transToDegree(double currentValue)
 
 double GPSCoordWidget::_transFromDegree(double degree)
 {
+    // 为防止C++精度损失做的微小增加
+    degree += 1e-13;
     if (m_degreeRBtn->isChecked())
     {
         return degree;
