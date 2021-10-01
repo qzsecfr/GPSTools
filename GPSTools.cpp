@@ -17,7 +17,6 @@ void GPSTools::_init()
     m_gpsTimeWidget = new GPSTimeWidget(this);
     m_tabWidget->addTab(m_gpsTimeWidget, QString::fromLocal8Bit("GPSÊ±¼ä×ª»»"));
 
-
     auto* layout = new QHBoxLayout(this);
     layout->addWidget(m_tabWidget);
 }

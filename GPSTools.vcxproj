@@ -39,6 +39,9 @@
     <QtInstall>5.12.8_msvc2017_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
+    <QtPathBinaries>C:\Qt\Qt5.12.8\5.12.8\msvc2017_64\bin</QtPathBinaries>
+    <QtPathLibraryExecutables>C:\Qt\Qt5.12.8\5.12.8\msvc2017_64\lib</QtPathLibraryExecutables>
+    <QtDeploy>true</QtDeploy>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
     <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
