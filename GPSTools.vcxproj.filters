@@ -39,9 +39,15 @@
     <ClCompile Include="GPSAlgorithm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GPSCoordWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GPSTimeWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="GPSCoordWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

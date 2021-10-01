@@ -4,6 +4,7 @@
 
 class QTabWidget;
 class GPSTimeWidget;
+class GPSCoordWidget;
 
 class GPSTools : public QWidget
 {
@@ -11,6 +12,8 @@ class GPSTools : public QWidget
 
         QTabWidget* m_tabWidget = nullptr;
     GPSTimeWidget* m_gpsTimeWidget = nullptr;
+    GPSCoordWidget* m_gpsCoordWidget = nullptr;
+
 public:
     GPSTools(QWidget *parent = Q_NULLPTR);
 
