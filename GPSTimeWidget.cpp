@@ -89,22 +89,6 @@ void GPSTimeWidget::_onBtnClicked()
     {
         int gpsWeek = m_gpsWeekEdit->text().toInt();
         double gpsSecond = m_gpsSecondEdit->text().toDouble();
-        bool valid = true;
-        while (gpsSecond < 0)
-        {
-            gpsWeek--;
-            gpsSecond += 86400.0 * 7;
-            if (gpsWeek < 0)
-            {
-                valid = false;
-                break;
-            }
-        }
-        while (gpsSecond >= 86400.0 * 7)
-        {
-            gpsWeek++;
-            gpsSecond -= 86400.0 * 7;
-        }
         UTCT utct = GPST2UTCT(GPST(gpsWeek, gpsSecond));
         m_utcEdit->setDateTime(utct.getDateTime());
         _onDateChanged();
