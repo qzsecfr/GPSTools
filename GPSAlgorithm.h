@@ -1,6 +1,7 @@
 #pragma once
 #include <QDateTime>
 #include <QDate>
+#include <QTime>
 
 struct UTCT
 {
@@ -51,12 +52,63 @@ struct UTCT
         second = utct.second;
         return *this;
     }
+
+    QDateTime getDateTime()
+    {
+        QDateTime dateTime;
+        dateTime.setDate(QDate(year, month, day));
+        dateTime.setTime(QTime(hour, minute, second));
+        return dateTime;
+    }
+
+    QDate getDate()
+    {
+        return QDate(year, month, day);
+    }
+
+    QTime getTime()
+    {
+        return QTime(hour, minute, second);
+    }
 };
 
 struct GPST
 {
-    int week = 1;
-    double second = 0;
+    int week;
+    double second;
+
+    GPST()
+    {
+        week = 1;
+        second = 0;
+    }
+
+    GPST(int week1, double second1)
+    {
+        week = week1;
+        second = second1;
+        bool valid = true;
+        while (second < 0)
+        {
+            week--;
+            second += 86400.0 * 7;
+            if (week < 0)
+            {
+                valid = false;
+                break;
+            }
+        }
+        while (second >= 86400.0 * 7)
+        {
+            week++;
+            second -= 86400.0 * 7;
+        }
+        if (!valid)
+        {
+            week = 1;
+            second = 0;
+        }
+    }
 
     GPST& operator=(const GPST& gpst)
     {
@@ -66,8 +118,16 @@ struct GPST
     }
 };
 
-void UTCT2GPST(const UTCT& utct, GPST& gpst);
+GPST UTCT2GPST(const UTCT& utct);
 
-void GPST2UTCT(const GPST& gpst, UTCT& utct);
+UTCT GPST2UTCT(const GPST& gpst);
 
 int UTCT2DOY(const UTCT& utct);
+
+double UTCT2MJD(const UTCT& utct);
+
+UTCT MJD2UTCT(double mjd);
+
+GPST MJD2GPST(double mjd);
+
+double GPST2MJD(const GPST& gpst);

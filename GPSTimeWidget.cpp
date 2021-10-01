@@ -73,6 +73,9 @@ void GPSTimeWidget::_init()
     mainLayout->addWidget(utcBox);
     mainLayout->addLayout(btnLayout);
     mainLayout->addWidget(gpsBox);
+
+    // ³õÊ¼»¯DOY
+    _onDateChanged();
 }
 
 void GPSTimeWidget::_onBtnClicked()
@@ -84,11 +87,33 @@ void GPSTimeWidget::_onBtnClicked()
     }
     else if (btn == m_gps2utcBtn)
     {
-        // TODO
+        int gpsWeek = m_gpsWeekEdit->text().toInt();
+        double gpsSecond = m_gpsSecondEdit->text().toDouble();
+        bool valid = true;
+        while (gpsSecond < 0)
+        {
+            gpsWeek--;
+            gpsSecond += 86400.0 * 7;
+            if (gpsWeek < 0)
+            {
+                valid = false;
+                break;
+            }
+        }
+        while (gpsSecond >= 86400.0 * 7)
+        {
+            gpsWeek++;
+            gpsSecond -= 86400.0 * 7;
+        }
+        UTCT utct = GPST2UTCT(GPST(gpsWeek, gpsSecond));
+        m_utcEdit->setDateTime(utct.getDateTime());
+        _onDateChanged();
     }
     else if (btn == m_utc2gpsBtn)
     {
-        // TODO
+        GPST gpst = UTCT2GPST(UTCT(m_utcEdit->dateTime()));
+        m_gpsWeekEdit->setText(QString::number(gpst.week));
+        m_gpsSecondEdit->setText(QString::number(gpst.second, 'f', 3));
     }
 }
 
