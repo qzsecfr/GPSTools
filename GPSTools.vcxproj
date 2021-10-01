@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GPSAlgorithm.h" />
+    <ClInclude Include="GPSDefine.h" />
     <QtMoc Include="GPSCoordWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

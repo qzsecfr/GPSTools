@@ -1,3 +1,5 @@
+#pragma warning(disable:26451)
+
 #include "GPSAlgorithm.h"
 
 GPST UTCT2GPST(const UTCT& utct)
@@ -88,4 +90,47 @@ GPST MJD2GPST(double mjd)
 double GPST2MJD(const GPST& gpst)
 {
     return 44244 + gpst.week * 7 + gpst.second / 86400.0;
+}
+
+XYZ BLH2XYZ(const BLH& blh)
+{
+    double sinLat = sin(blh.lat * D2R);
+    double cosLat = cos(blh.lat * D2R);
+    double sinLon = sin(blh.lon * D2R);
+    double cosLon = cos(blh.lon * D2R);
+    double N = WGS84_ELLIP_A / (sqrt(1 - WGS84_E2 * sinLat * sinLat));
+    XYZ xyz;
+    xyz.X = (N + blh.alt) * cosLat * cosLon;
+    xyz.Y = (N + blh.alt) * cosLat * sinLon;
+    xyz.Z = (N * (1 - WGS84_E2) + blh.alt) * sinLat;
+    return xyz;
+}
+
+BLH XYZ2BLH(const XYZ& xyz)
+{
+    double X = xyz.X;
+    double Y = xyz.Y;
+    double Z = xyz.Z;
+    double B = 0.0, L = 0.0, H = 0.0; // rad
+    double dZ = WGS84_E2 * Z;
+    double N = 0.0;
+    double sinB = 0.0;
+    double dZP = 0.0;
+    int flag = 0;
+    do
+    {
+        dZP = dZ;
+        L = atan2(Y, X);
+        B = atan2(Z + dZ, sqrt(X * X + Y * Y));
+        sinB = (Z + dZ) / sqrt(X * X + Y * Y + (Z + dZ) * (Z + dZ));
+        N = WGS84_ELLIP_A / (sqrt(1 - WGS84_E2 * sin(B) * sin(B)));
+        H = sqrt(X * X + Y * Y + (Z + dZ) * (Z + dZ)) - N;
+        dZ = N * WGS84_E2 * sinB;
+        flag += 1;
+    } while (((dZ - dZP) > 1e-8) && (flag < 10));
+    BLH blh;
+    blh.lat = B * R2D;
+    blh.lon = L * R2D;
+    blh.alt = H;
+    return blh;
 }
