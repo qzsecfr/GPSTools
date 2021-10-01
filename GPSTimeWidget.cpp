@@ -1,4 +1,16 @@
 #include "GPSTimeWidget.h"
+#include "GPSAlgorithm.h"
+
+#include <QDateTimeEdit>
+#include <QLineEdit>
+#include <QLabel>
+#include <QPushButton>
+#include <QDateTime>
+#include <QIntValidator>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QGridLayout>
+#include <QGroupBox>
 
 GPSTimeWidget::GPSTimeWidget(QWidget* parent)
     : QWidget(parent)
@@ -8,10 +20,84 @@ GPSTimeWidget::GPSTimeWidget(QWidget* parent)
 
 void GPSTimeWidget::_init()
 {
+    QLabel* utcLabel = new QLabel(QString::fromLocal8Bit("UTC时间"));
+    m_utcEdit = new QDateTimeEdit;
+    m_utcEdit->setDateTime(QDateTime::currentDateTimeUtc());
+    m_utcEdit->setCalendarPopup(true);
+    m_utcEdit->setDisplayFormat("yyyy/MM/dd hh:mm:ss");
 
+    QLabel* dayOfYearLabel = new QLabel(QString::fromLocal8Bit("年积日"));
+    m_dayOfYearEdit = new QLineEdit;
+    m_dayOfYearEdit->setValidator(new QIntValidator(1, 366));
+
+    QLabel* gpsWeekLabel = new QLabel(QString::fromLocal8Bit("GPS周"));
+    m_gpsWeekEdit = new QLineEdit;
+    m_gpsWeekEdit->setValidator(new QIntValidator(1, 9999));
+
+    QLabel* gpsSecLabel = new QLabel(QString::fromLocal8Bit("周内秒"));
+    m_gpsSecondEdit = new QLineEdit;
+    m_gpsSecondEdit->setValidator(new QDoubleValidator(0, 604800, 6));
+
+    m_utc2gpsBtn = new QPushButton(QString::fromLocal8Bit("-->"));
+    m_gps2utcBtn = new QPushButton(QString::fromLocal8Bit("<--"));
+
+    connect(m_utc2gpsBtn, SIGNAL(clicked(bool)), SLOT(_onBtnClicked()));
+    connect(m_gps2utcBtn, SIGNAL(clicked(bool)), SLOT(_onBtnClicked()));
+    connect(m_utcEdit, SIGNAL(dateChanged(QDate)), SLOT(_onDateChanged()));
+
+    QGroupBox* utcBox = new QGroupBox(QString::fromLocal8Bit("UTC时间"));
+    {
+        QGridLayout* utcLayout = new QGridLayout(utcBox);
+        utcLayout->addWidget(utcLabel, 0, 0);
+        utcLayout->addWidget(m_utcEdit, 0, 1);
+        utcLayout->addWidget(dayOfYearLabel, 1, 0);
+        utcLayout->addWidget(m_dayOfYearEdit, 1, 1);
+    }
+    QGroupBox* gpsBox = new QGroupBox(QString::fromLocal8Bit("GPS时间"));
+    {
+        QGridLayout* gpsLayout = new QGridLayout(gpsBox);
+        gpsLayout->addWidget(gpsWeekLabel, 0, 0);
+        gpsLayout->addWidget(m_gpsWeekEdit, 0, 1);
+        gpsLayout->addWidget(gpsSecLabel, 1, 0);
+        gpsLayout->addWidget(m_gpsSecondEdit, 1, 1);
+    }
+    QVBoxLayout* btnLayout = new QVBoxLayout;
+    {
+        btnLayout->addStretch();
+        btnLayout->addWidget(m_utc2gpsBtn);
+        btnLayout->addSpacing(10);
+        btnLayout->addWidget(m_gps2utcBtn);
+        btnLayout->addStretch();
+    }
+    QHBoxLayout* mainLayout = new QHBoxLayout(this);
+    mainLayout->addWidget(utcBox);
+    mainLayout->addLayout(btnLayout);
+    mainLayout->addWidget(gpsBox);
 }
 
 void GPSTimeWidget::_onBtnClicked()
 {
+    QPushButton* btn = qobject_cast<QPushButton*>(sender());
+    if (btn == nullptr)
+    {
+        return;
+    }
+    else if (btn == m_gps2utcBtn)
+    {
+        // TODO
+    }
+    else if (btn == m_utc2gpsBtn)
+    {
+        // TODO
+    }
+}
 
+void GPSTimeWidget::_onDateChanged()
+{
+    UTCT utct(m_utcEdit->dateTime());
+    int dayOfYear = UTCT2DOY(utct);
+    if (dayOfYear)
+    {
+        m_dayOfYearEdit->setText(QString::number(dayOfYear));
+    }
 }

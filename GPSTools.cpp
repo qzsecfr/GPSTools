@@ -1,4 +1,5 @@
 #include "GPSTools.h"
+#include "GPSTimeWidget.h"
 
 #include <QTabWidget>
 #include <QHBoxLayout>
@@ -13,8 +14,9 @@ GPSTools::GPSTools(QWidget *parent)
 void GPSTools::_init()
 {
     m_tabWidget = new QTabWidget;
-    // TODO
-    // add widgets
+    m_gpsTimeWidget = new GPSTimeWidget(this);
+    m_tabWidget->addTab(m_gpsTimeWidget, QString::fromLocal8Bit("GPSÊ±¼ä×ª»»"));
+
 
     auto* layout = new QHBoxLayout(this);
     layout->addWidget(m_tabWidget);

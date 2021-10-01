@@ -19,6 +19,7 @@ private:
 
 private slots:
     void _onBtnClicked();
+    void _onDateChanged();
 
 private:
     QDateTimeEdit* m_utcEdit;

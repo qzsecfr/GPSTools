@@ -87,12 +87,16 @@
   <ItemGroup>
     <QtRcc Include="GPSTools.qrc" />
     <QtMoc Include="GPSTools.h" />
+    <ClCompile Include="GPSAlgorithm.cpp" />
     <ClCompile Include="GPSTimeWidget.cpp" />
     <ClCompile Include="GPSTools.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GPSTimeWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GPSAlgorithm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
