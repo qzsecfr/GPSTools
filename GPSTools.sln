@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GPSTools", "GPSTools.vcxproj", "{5A4A7FAF-CECD-4475-8395-3A54330B39E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A4A7FAF-CECD-4475-8395-3A54330B39E3}.Debug|x64.ActiveCfg = Debug|x64
+		{5A4A7FAF-CECD-4475-8395-3A54330B39E3}.Debug|x64.Build.0 = Debug|x64
+		{5A4A7FAF-CECD-4475-8395-3A54330B39E3}.Release|x64.ActiveCfg = Release|x64
+		{5A4A7FAF-CECD-4475-8395-3A54330B39E3}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2672A05A-BE3C-4446-BC6D-F27452D7B0B9}
+	EndGlobalSection
+EndGlobal
