@@ -60,10 +60,10 @@ void GPSCoordWidget::_init()
     {
         auto* latLabel = new QLabel(QString::fromLocal8Bit("纬度"));
         m_latEdit = new QLineEdit;
-        m_latEdit->setValidator(new QDoubleValidator);
+        m_latEdit->setValidator(new QDoubleValidator(-90, 90, 12));
         auto* lonLabel = new QLabel(QString::fromLocal8Bit("经度"));
         m_lonEdit = new QLineEdit;
-        m_lonEdit->setValidator(new QDoubleValidator);
+        m_lonEdit->setValidator(new QDoubleValidator(-180, 180, 12));
         auto* altLabel = new QLabel(QString::fromLocal8Bit("大地高"));
         m_altEdit = new QLineEdit;
         m_altEdit->setValidator(new QDoubleValidator);
@@ -117,6 +117,30 @@ void GPSCoordWidget::_init()
     }
 }
 
+double GPSCoordWidget::_transToDegree(double currentValue)
+{
+    if (m_degreeRBtn->isChecked())
+    {
+        return currentValue;
+    }
+    int D = static_cast<int>(currentValue);
+    int M = static_cast<int>((currentValue - D) * 100.0);
+    double S = ((currentValue - D) * 100.0 - M) * 100.0;
+    return D + M / 60.0 + S / 3600.0;
+}
+
+double GPSCoordWidget::_transFromDegree(double degree)
+{
+    if (m_degreeRBtn->isChecked())
+    {
+        return degree;
+    }
+    int D = static_cast<int>(degree);
+    int M = static_cast<int>((degree - D) * 60.0);
+    double S = (degree - D - M / 60.0) * 3600.0;
+    return D + M / 100.0 + S / 10000.0;
+}
+
 void GPSCoordWidget::_onBtnClicked()
 {
     QPushButton* btn = qobject_cast<QPushButton*>(sender());
@@ -126,11 +150,23 @@ void GPSCoordWidget::_onBtnClicked()
     }
     else if (btn == m_xyz2blhBtn)
     {
-        // TODO
+        double X = m_ecefXEdit->text().toDouble();
+        double Y = m_ecefYEdit->text().toDouble();
+        double Z = m_ecefZEdit->text().toDouble();
+        BLH blh = XYZ2BLH(XYZ(X, Y, Z));
+        m_latEdit->setText(QString::number(_transFromDegree(blh.lat), 'f', 9));
+        m_lonEdit->setText(QString::number(_transFromDegree(blh.lon), 'f', 9));
+        m_altEdit->setText(QString::number(blh.alt, 'f', 3));
     }
     else if (btn == m_blh2xyzBtn)
     {
-        // TODO
+        double lat = _transToDegree(m_latEdit->text().toDouble());
+        double lon = _transToDegree(m_lonEdit->text().toDouble());
+        double alt = m_altEdit->text().toDouble();
+        XYZ xyz = BLH2XYZ(BLH(lat, lon, alt));
+        m_ecefXEdit->setText(QString::number(xyz.X, 'f', 3));
+        m_ecefYEdit->setText(QString::number(xyz.Y, 'f', 3));
+        m_ecefZEdit->setText(QString::number(xyz.Z, 'f', 3));
     }
     else if (btn == m_xyz2blhBatchBtn)
     {

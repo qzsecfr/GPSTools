@@ -16,6 +16,8 @@ public:
 
 private:
     void _init();
+    double _transToDegree(double currentValue);
+    double _transFromDegree(double degree);
 
 private slots:
     void _onBtnClicked();
