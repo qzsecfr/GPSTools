@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5A4A7FAF-CECD-4475-8395-3A54330B39E3}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
@@ -91,6 +91,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="RinexFileParse.cpp" />
     <QtRcc Include="GPSTools.qrc" />
     <QtMoc Include="GPSTools.h" />
     <ClCompile Include="GPSAlgorithm.cpp" />
@@ -105,6 +106,8 @@
   <ItemGroup>
     <ClInclude Include="GPSAlgorithm.h" />
     <ClInclude Include="GPSDefine.h" />
+    <ClInclude Include="RinexFileParse.h" />
+    <ClInclude Include="RinexDataStructDefine.h" />
     <QtMoc Include="GPSCoordWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
